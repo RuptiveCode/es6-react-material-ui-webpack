@@ -10,14 +10,14 @@ module.exports = {
         path: './build',
         filename: 'bundle.js'
     },
+    devtool: 'inline-source-map',    
     module: {
         loaders: [{
             test: /\.js$/,
             exclude: /node_modules/,
             loader: 'babel-loader',
             query: {
-                optional: ['runtime'],
-                stage: 0
+                presets: ['react', 'es2015', 'stage-0']
             }
         }, {
             test: /\.css$/,
@@ -32,5 +32,8 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js', Infinity)
-    ]
+    ],
+    devServer: {
+      historyApiFallback: true
+    }
 };

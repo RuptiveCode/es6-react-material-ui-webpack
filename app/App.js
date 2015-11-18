@@ -1,16 +1,17 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Home from './components/pages/Home';
+import VendorReport from './components/pages/VendorReport';
 import { Router, Route, IndexRoute, Link } from 'react-router';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 
 import './styles/main.css';
 import AppTheme from './styles/AppTheme';
 
 import mui from 'material-ui';
-let ThemeManager         = new mui.Styles.ThemeManager(),
-    Colors               = mui.Styles.Colors,
-    Spacing              = mui.Styles.Spacing,
-    Typography           = mui.Styles.Typography,
+
+let ThemeManager         = new mui.Styles.ThemeManager.getMuiTheme(AppTheme),
     AppBar               = mui.AppBar,
     LeftNav              = mui.LeftNav,
     MenuItem             = mui.MenuItem,
@@ -23,22 +24,18 @@ let ThemeManager         = new mui.Styles.ThemeManager(),
 let injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
 export default class App extends React.Component {
 
     constructor(props) {
-        super(props);
-        ThemeManager.setTheme(AppTheme);
+        super(props);    
     }
     
     render() {
         var key = this.props.location.pathname;
-        var themeVariables = ThemeManager.getCurrentTheme().component.appBar;          
 
         return (
             <div className="app-container"> 
-                <ReactCSSTransitionReplace component="div" transitionName="page">
+                <ReactCSSTransitionReplace component="div" transitionName="page" transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                    {React.cloneElement(this.props.children || <div />, { key: key })}
                 </ReactCSSTransitionReplace>
             </div>
@@ -49,13 +46,11 @@ export default class App extends React.Component {
 class AppContainer extends React.Component {
 
     static childContextTypes = {
-        muiTheme: React.PropTypes.object.isRequired,
         mui: React.PropTypes.object.isRequired
     };    
 
     getChildContext() {
         return {
-          muiTheme: ThemeManager.getCurrentTheme(),
           mui: mui
         };
     }      
@@ -65,6 +60,7 @@ class AppContainer extends React.Component {
           <Router>
             <Route path="/" component={App}>
               <IndexRoute component={Home}/>
+              <Route path="vendor-report" component={VendorReport} />
             </Route>
           </Router>
         );
@@ -72,4 +68,4 @@ class AppContainer extends React.Component {
 }
 
 
-React.render(<AppContainer />, document.getElementById('app'));
+ReactDOM.render(<AppContainer />, document.getElementById('app'));
